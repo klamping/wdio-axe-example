@@ -9,10 +9,16 @@ describe('axe test', function () {
     // inject the script
     browser.execute(axeSource);
     // browser.debug();
-    var options = {runOnly: {type: "tag", values: ["wcag2a"]}};
+    var theOptions;
+    theOptions = {runOnly: {type: "rule", values: ['link-name']}};
     // run inside browser and get results
-    let results = browser.executeAsync(function (options, done) {axe.run(function (err, results) { done(results);});}, {runOnly: {type: "tag", values: ["wcag2a"]}});
-  
+    let results = browser.executeAsync(function (options, done) {
+      axe.run(options, function (err, results) {
+        if (err) done(err);
+        done(results);
+      });
+    }, theOptions);
+
     // assert there are no violations
     console.log(results.value, 'values')
     console.log(results.value.violations, 'vol')
